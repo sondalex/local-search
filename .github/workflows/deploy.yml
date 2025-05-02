@@ -1,0 +1,45 @@
+name: Deploy to GitHub pages and to HuggingFace spaces 
+
+on:
+  push:
+    branches: ["master", "main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deployToGithub:
+    runs-on: ubuntu-latest
+    environment:
+      name: gh-pages
+      url: ${{ steps.deploy_to_pages.outputs.github_pages_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Deploy to Github Pages
+        uses: skywarth/vite-github-pages-deployer@master
+        id: deploy_to_pages
+        with:
+          package_manager: yarn 
+  deployToSpaces:
+    runs-on: ubuntu-latest 
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: npm install
+      - name: Build project
+        run: npm run build
+      - name: Deploy to HF Space 
+        uses: sondalex/hf-space-deployer-action@main
+        with:
+            directory: dist/
+            repo_id: "sondalex/local-search" 
+            hf_token: ${{ secrets.HF_TOKEN }}
+
