@@ -37,7 +37,7 @@ jobs:
       - name: Build project
         run: npm run build
       - name: Deploy to HF Space 
-        uses: sondalex/hf-space-deployer-action@main
+        uses: sondalex/hf-space-mirror-action@main
         with:
             directory: dist/
             repo_id: "sondalex/local-search" 
