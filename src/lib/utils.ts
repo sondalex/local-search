@@ -191,7 +191,7 @@ function buildSearchQuery(
                 ) as score
             FROM filtered_papers p
             WHERE score IS NOT NULL
-            ORDER BY score DESC 
+            ORDER BY score ASC
             LIMIT ${limit}
         `
     } else {
